@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "221120351327",
+    "project_id": "nypunyaconnect",
+    "storage_bucket": "nypunyaconnect.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:221120351327:android:ab331e0167490f7a32dfea",
+        "android_client_info": {
+          "package_name": "com.android.nypunya"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNa3EZR-Opai-4OwbXaM1UqzSoliJaQ3g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

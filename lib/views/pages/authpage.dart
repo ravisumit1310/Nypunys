@@ -1,4 +1,6 @@
 import 'package:academyapp/controllers/logincontroller.dart';
+import 'package:academyapp/controllers/sessionController.dart';
+import 'package:academyapp/utils/apicServices.dart';
 import 'package:academyapp/views/fragments/appbarFrag.dart';
 import 'package:academyapp/views/fragments/bottombarFrag.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +10,11 @@ import 'package:google_fonts/google_fonts.dart';
 class ForgotPasswordPage extends StatelessWidget {
   final ForgotPasswordController controller =
       Get.put(ForgotPasswordController());
+
+  final SessionController sessionController = Get.put(SessionController());
+
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -84,11 +91,6 @@ class ForgotPasswordPage extends StatelessWidget {
           ),
           Obx(() {
             if (!controller.showForgotPasswordForm.value) {
-              final TextEditingController emailController =
-                  TextEditingController();
-              final TextEditingController passwordController =
-                  TextEditingController();
-
               // Sign-in form
               return Positioned(
                 top: height * 0.45,
@@ -104,15 +106,10 @@ class ForgotPasswordPage extends StatelessWidget {
                     Container(
                       width: 315,
                       height: 62,
-                      // decoration: BoxDecoration(
-                      //   border: Border(
-                      //     bottom: BorderSide(color: Colors.white),
-                      //   ),
-                      // ),
                       child: TextField(
                         controller: emailController,
                         decoration: InputDecoration(
-                          hintText: "Mobile Number or Email",
+                          hintText: " ",
                           hintStyle: TextStyle(color: Colors.white),
                           enabledBorder: UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.white),
@@ -121,7 +118,7 @@ class ForgotPasswordPage extends StatelessWidget {
                             borderSide: BorderSide(color: Colors.blue),
                           ),
                         ),
-                        style: TextStyle(color: Colors.white), // Text color
+                        style: TextStyle(color: Colors.white),
                       ),
                     ),
                     SizedBox(height: 30),
@@ -133,15 +130,10 @@ class ForgotPasswordPage extends StatelessWidget {
                     Container(
                       width: 315,
                       height: 62,
-                      // decoration: BoxDecoration(
-                      //   border: Border(
-                      //     bottom: BorderSide(color: Colors.white),
-                      //   ),
-                      // ),
                       child: TextField(
                         controller: passwordController,
                         decoration: InputDecoration(
-                          labelText: 'Password',
+                          labelText: " ",
                           labelStyle: TextStyle(color: Colors.white),
                           enabledBorder: UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.white),
@@ -151,31 +143,72 @@ class ForgotPasswordPage extends StatelessWidget {
                           ),
                         ),
                         obscureText: true, // Hide password input
-                        style: TextStyle(color: Colors.white), // Text color
+                        style: TextStyle(color: Colors.white),
                       ),
                     ),
                     SizedBox(height: 30),
                     Column(
                       children: [
                         ElevatedButton(
-                          onPressed: () {
-                            print("Mobile/email -> ${emailController}");
-                            print("password -> ${passwordController}");
-                            Get.to(() => BottomFragment());
+                          onPressed: () async {
+                            final email = emailController.text.trim();
+                            final password = passwordController.text.trim();
+
+                            if (email.isEmpty || password.isEmpty) {
+                              Get.snackbar(
+                                "Error",
+                                "Email and password cannot be empty.",
+                                backgroundColor: Colors.red,
+                                colorText: Colors.white,
+                              );
+                              return;
+                            }
+
+                            try {
+                              final apiService = ApiService();
+                              final response = await apiService.studentLogin(
+                                  email, password);
+                              if (response.containsKey('access_token')) {
+                                // Store the token
+                                final token = response['access_token'];
+                                apiService.storage
+                                    .write("student_token", token);
+
+                                // Navigate to the next screen
+                                Get.to(() => BottomFragment());
+                              } else {
+                                // Handle unexpected API response
+                                Get.snackbar(
+                                  "Error",
+                                  "Unexpected response from server.",
+                                  backgroundColor: Colors.red,
+                                  colorText: Colors.white,
+                                );
+                              }
+                            } catch (e) {
+                              // Handle login failure
+                              Get.snackbar(
+                                "Login Failed",
+                                e.toString(),
+                                backgroundColor: Colors.red,
+                                colorText: Colors.white,
+                              );
+                            }
                           },
                           style: ButtonStyle(
                             minimumSize: MaterialStateProperty.all(
-                                Size(250, 50)), // Broader width
-                            backgroundColor: MaterialStateProperty.all(
-                                Colors.white), // Button background
+                                Size(250, 50)), // Set fixed size
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.white),
                             shape: MaterialStateProperty.all(
                               RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.circular(10), // Reduced radius
+                                borderRadius: BorderRadius.circular(10),
                               ),
                             ),
                           ),
                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment
+                                .spaceBetween, // Distribute items in Row
                             children: [
                               Text(
                                 'Login',
@@ -184,13 +217,10 @@ class ForgotPasswordPage extends StatelessWidget {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              SizedBox(
-                                width: height * 0.26, // Spacing for icon
-                              ),
                               Icon(
                                 Icons.arrow_forward,
                                 color: Colors.blue,
-                              )
+                              ),
                             ],
                           ),
                         ),

@@ -1,3 +1,4 @@
+import 'package:academyapp/views/fragments/bottombarFrag.dart';
 import 'package:academyapp/views/pages/attendance.dart';
 import 'package:academyapp/views/pages/authpage.dart';
 import 'package:academyapp/views/pages/homePage.dart';
@@ -15,5 +16,6 @@ class Approutes {
     GetPage(name: '/work', page: () => HomeWork()),
     GetPage(name: '/attendance', page: () => AttendancePage()),
     GetPage(name: '/report', page: () => MessagePage()),
+    GetPage(name: '/bottomFragment', page: () => BottomFragment()),
   ];
 }

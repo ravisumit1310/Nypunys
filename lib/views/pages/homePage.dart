@@ -19,7 +19,7 @@ class HomePage extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: CustomAppBar(
         title: "Home Page",
-        showBackButton: true,
+        showBackButton: false,
       ),
       body: SafeArea(
         child: Stack(

@@ -1,5 +1,7 @@
+import 'package:academyapp/utils/apicServices.dart';
 import 'package:academyapp/views/fragments/appbarFrag.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -157,7 +159,6 @@ class ProfilePage extends StatelessWidget {
                 height: 1,
                 color: Colors.grey.shade300,
               ),
-
               //Help
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -207,6 +208,13 @@ class ProfilePage extends StatelessWidget {
                     Icons.navigate_next,
                     color: Colors.black,
                   ),
+                  onTap: () {
+                    final apiService = ApiService();
+                    // Perform logout -> which is in the apicServices
+                    apiService.logoutStudent();
+                    // Navigate to the login page using GetX route
+                    Get.offNamed('/login');
+                  },
                 ),
               ),
             ],

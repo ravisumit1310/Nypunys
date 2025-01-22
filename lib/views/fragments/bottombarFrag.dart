@@ -23,41 +23,39 @@ class BottomFragment extends StatelessWidget {
   bottomMenu(BuildContext context, BottomNavigationController controller) {
     return Obx(
       () => MediaQuery(
-          data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
-          child: SizedBox(
-            height: 54,
-            child: BottomNavigationBar(
-              showUnselectedLabels: true,
-              showSelectedLabels: true,
-              onTap: (index) {
-                controller.tab(index);
-              },
-              currentIndex: controller.tab.value,
-              backgroundColor: Colors.blueGrey.shade500,
-              unselectedItemColor: Colors.grey.withOpacity(0.9),
-              selectedItemColor: Colors.purpleAccent,
-              unselectedLabelStyle: unselectedLabelStyle,
-              selectedLabelStyle: selectedLabelStyle,
-              items: [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home_filled),
-                  label: 'Home',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.quiz_outlined),
-                  label: 'Quiz',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.add_chart_outlined),
-                  label: 'Attendance',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.person),
-                  label: 'Profile',
-                ),
-              ],
+        data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+        child: BottomNavigationBar(
+          showUnselectedLabels: true,
+          showSelectedLabels: true,
+          onTap: (index) {
+            controller.tab(index);
+          },
+          currentIndex: controller.tab.value,
+          backgroundColor: Colors.blueGrey.shade500,
+          unselectedItemColor: Colors.grey.withOpacity(0.9),
+          selectedItemColor: Colors.purpleAccent,
+          unselectedLabelStyle: unselectedLabelStyle,
+          selectedLabelStyle: selectedLabelStyle,
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home_filled),
+              label: 'Home',
             ),
-          )),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.quiz_outlined),
+              label: 'Quiz',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.add_chart_outlined),
+              label: 'Attendance',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Profile',
+            ),
+          ],
+        ),
+      ),
     );
   }
 

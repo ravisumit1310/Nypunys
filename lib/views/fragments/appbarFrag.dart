@@ -27,7 +27,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 color: Colors.black,
               ))
           : const Icon(
-              Icons.person,
+              Icons.account_circle,
               color: Colors.black,
             ),
       title: Text(
