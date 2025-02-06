@@ -7,15 +7,17 @@ import 'package:academyapp/views/pages/work.dart';
 import 'package:get/get.dart';
 
 import '../views/pages/messages.dart';
+import '../views/pages/profileDetails.dart';
 
 class Approutes {
   static final routes = [
     GetPage(name: '/home', page: () => HomePage()),
-    GetPage(name: '/login', page: () => ForgotPasswordPage()),
+    GetPage(name: '/login', page: () => LoginPage()),
     GetPage(name: '/profile', page: () => ProfilePage()),
     GetPage(name: '/work', page: () => HomeWork()),
     GetPage(name: '/attendance', page: () => AttendancePage()),
     GetPage(name: '/report', page: () => MessagePage()),
     GetPage(name: '/bottomFragment', page: () => BottomFragment()),
+    GetPage(name: '/studentDetails', page: () => StudentProfilePage()),
   ];
 }

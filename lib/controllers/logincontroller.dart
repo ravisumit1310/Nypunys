@@ -1,19 +1,23 @@
+import 'package:academyapp/controllers/sessionController.dart';
 import 'package:get/get.dart';
+import 'package:academyapp/utils/apicServices.dart';
 
-class ForgotPasswordController extends GetxController {
-  // Boolean to manage the visibility of Forgot Password form
-  var showForgotPasswordForm = false.obs;
+import '../views/fragments/bottombarFrag.dart';
 
-  // Function to toggle the form visibility
-  void toggleForgotPasswordForm() {
-    showForgotPasswordForm.value = !showForgotPasswordForm.value;
-  }
-}
+class loginController extends GetxController {
+  final sessionController = Get.find<SessionController>();
 
-class AuthController extends GetxController {
-  RxBool isLogin = true.obs;
+  Future<bool> login(String id, String password) async {
+    var resp = await ApiService.post('/student/login/', {
+      'id': id,
+      'password': password,
+    });
 
-  void toggleForm() {
-    isLogin.value = !isLogin.value;
+    if (resp != null && resp.containsKey('access_token')) {
+      sessionController.saveSession(
+          resp['access_token'], resp['refresh_token']);
+      return true;
+    }
+    return false;
   }
 }

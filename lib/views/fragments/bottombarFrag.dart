@@ -2,9 +2,7 @@ import 'package:academyapp/controllers/bottomNavigation_Controller.dart';
 import 'package:academyapp/views/pages/attendance.dart';
 import 'package:academyapp/views/pages/homePage.dart';
 import 'package:academyapp/views/pages/profile.dart';
-import 'package:academyapp/views/pages/messages.dart';
 import 'package:academyapp/views/pages/quiz.dart';
-import 'package:academyapp/views/pages/work.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

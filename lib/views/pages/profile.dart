@@ -1,4 +1,4 @@
-import 'package:academyapp/utils/apicServices.dart';
+import 'package:academyapp/controllers/sessionController.dart';
 import 'package:academyapp/views/fragments/appbarFrag.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,7 +9,7 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double swidth = MediaQuery.of(context).size.width;
-    double sheingt = MediaQuery.of(context).size.height;
+    // double sheingt = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: CustomAppBar(
@@ -76,7 +76,34 @@ class ProfilePage extends StatelessWidget {
                 ],
               ),
 
-              //This is the list tiles of profile section
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListTile(
+                  leading: Container(
+                    height: 50,
+                    width: 50,
+                    child: Icon(
+                      Icons.person,
+                      color: Colors.purple,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      color: Colors.grey.withOpacity(0.1),
+                    ),
+                  ),
+                  title: Text("your Details"),
+                  trailing: Icon(
+                    Icons.navigate_next,
+                    color: Colors.black,
+                  ),
+                  onTap: () => Get.toNamed('/studentDetails'),
+                ),
+              ),
+              Divider(
+                height: 1,
+                color: Colors.grey.shade300,
+              ),
+
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ListTile(
@@ -209,9 +236,9 @@ class ProfilePage extends StatelessWidget {
                     color: Colors.black,
                   ),
                   onTap: () {
-                    final apiService = ApiService();
+                    final logoutService = SessionController();
                     // Perform logout -> which is in the apicServices
-                    apiService.logoutStudent();
+                    logoutService.logout();
                     // Navigate to the login page using GetX route
                     Get.offNamed('/login');
                   },

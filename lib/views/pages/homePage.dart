@@ -3,7 +3,6 @@ import 'package:academyapp/views/pages/messages.dart';
 import 'package:academyapp/views/widget/bottomsheetWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../controllers/floatingActionButton.dart';
 

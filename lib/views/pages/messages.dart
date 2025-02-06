@@ -1,5 +1,3 @@
-import 'package:academyapp/utils/errorAnimation.dart';
-import 'package:academyapp/views/fragments/appbarFrag.dart';
 import 'package:academyapp/views/fragments/customtabFrag.dart';
 import 'package:flutter/material.dart';
 
