@@ -15,36 +15,57 @@ class StudentController extends GetxController {
     try {
       isLoading.value = true;
 
-      final accessToken = Get.find<SessionController>().accessToken;
+      final apiService = Get.find<ApiService>();
 
-      if (accessToken == null) {
-        Get.snackbar("Error", "User is not authenticated");
+      final response = await apiService.get("/student/profile/");
+
+      if (response is Map && response.containsKey("error")) {
+        Get.snackbar("Error", response["error"]);
         return;
       }
 
-      final url = Uri.parse("${ServerConfig.baseUrl}/student/profile/");
-
-      final response = await http.get(
-        url,
-        headers: {
-          'Authorization': 'Bearer $accessToken',
-          ...ServerConfig.defaultHeaders,
-        },
-      );
-
-      if (response.statusCode == 200) {
-        final jsonData = jsonDecode(response.body);
-        print(jsonData);
-        student.value = StudentDetailsModel.fromJson(jsonData);
-        print(student.value);
-      } else {
-        Get.snackbar("Error", "Failed to fetch student details");
-      }
+      student.value = StudentDetailsModel.fromJson(response);
     } catch (e) {
-      print("Error fetching student details: $e");
       Get.snackbar("Error", "Something went wrong");
     } finally {
       isLoading.value = false;
     }
   }
+
+  // Future<void> fetchStudentDetails() async {
+  //   try {
+  //     isLoading.value = true;
+  //
+  //     final accessToken = Get.find<SessionController>().accessToken;
+  //
+  //     if (accessToken == null) {
+  //       Get.snackbar("Error", "Student is not authenticated");
+  //       return;
+  //     }
+  //
+  //     final url = Uri.parse("${ServerConfig.baseUrl}/student/profile/");
+  //
+  //     final response = await http.get(
+  //       url,
+  //       headers: {
+  //         'Authorization': 'Bearer $accessToken',
+  //         ...ServerConfig.defaultHeaders,
+  //       },
+  //     );
+  //
+  //     if (response.statusCode == 200) {
+  //       final jsonData = jsonDecode(response.body);
+  //       print(jsonData);
+  //       student.value = StudentDetailsModel.fromJson(jsonData);
+  //       print(student.value);
+  //     } else {
+  //       Get.snackbar("Error", "Failed to fetch student details");
+  //     }
+  //   } catch (e) {
+  //     print("Error fetching student details: $e");
+  //     Get.snackbar("Error", "Something went wrong");
+  //   } finally {
+  //     isLoading.value = false;
+  //   }
+  // }
 }

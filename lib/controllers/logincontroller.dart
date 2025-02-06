@@ -8,7 +8,8 @@ class loginController extends GetxController {
   final sessionController = Get.find<SessionController>();
 
   Future<bool> login(String id, String password) async {
-    var resp = await ApiService.post('/student/login/', {
+    final apiService = Get.find<ApiService>();
+    var resp = await apiService.post('/student/login/', {
       'id': id,
       'password': password,
     });
