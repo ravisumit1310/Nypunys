@@ -1,10 +1,8 @@
-import 'package:academyapp/controllers/sessionController.dart';
 import 'package:get/get.dart';
 
 import '../models/studentDetails_Model.dart';
 import '../utils/apicServices.dart';
 
-import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class StudentController extends GetxController {

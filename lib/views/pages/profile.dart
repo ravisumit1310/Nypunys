@@ -180,6 +180,7 @@ class ProfilePage extends StatelessWidget {
                     Icons.navigate_next,
                     color: Colors.black,
                   ),
+                  onTap: () => Get.toNamed('/schoolNotification'),
                 ),
               ),
               Divider(

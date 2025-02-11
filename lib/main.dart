@@ -23,8 +23,8 @@ void main() async {
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-  Get.put(SessionController()); // Register SessionController first
-  Get.put(ApiService(Get.find<SessionController>())); // Pass SessionController
+  Get.put(SessionController());
+  Get.put(ApiService(Get.find<SessionController>()));
 
   runApp(MyApp());
 }

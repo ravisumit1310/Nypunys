@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 
 import '../views/pages/messages.dart';
 import '../views/pages/profileDetails.dart';
+import '../views/pages/schoolNotification.dart';
 
 class Approutes {
   static final routes = [
@@ -19,5 +20,6 @@ class Approutes {
     GetPage(name: '/report', page: () => MessagePage()),
     GetPage(name: '/bottomFragment', page: () => BottomFragment()),
     GetPage(name: '/studentDetails', page: () => StudentProfilePage()),
+    GetPage(name: '/schoolNotification', page: () => NotificationsPage()),
   ];
 }
