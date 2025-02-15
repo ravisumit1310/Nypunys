@@ -5,29 +5,45 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 
+import '../models/studentDetails_Model.dart';
+
 class SessionController extends GetxController {
   final _storage = GetStorage();
   var isLoggedIn = false.obs;
+  StudentDetailsModel? _studentProfile;
 
   @override
   void onInit() {
     super.onInit();
     checkTokenOnStartUp();
-    // isLoggedIn.value = _storage.hasData('access_token');
+    loadStudentProfile();
   }
 
-  void saveSession(String accessToken, String refreshToken) {
+  void saveSession(String accessToken, String refreshToken,
+      Map<String, dynamic> studentData) {
     _storage.write('access_token', accessToken);
     _storage.write('refresh_token', refreshToken);
+    _storage.write('student_profile', jsonEncode(studentData));
+    _studentProfile = StudentDetailsModel.fromJson(studentData);
     isLoggedIn.value = true;
   }
 
   String? get accessToken => _storage.read('access_token');
   String? get refreshToken => _storage.read('refresh_token');
+  // Map<String, dynamic>? get studentProfile => _storage.read('student_profile');
+  StudentDetailsModel? get studentProfile => _studentProfile;
 
   void logout() {
     _storage.erase();
+    _studentProfile = null;
     isLoggedIn.value = false;
+  }
+
+  void loadStudentProfile() {
+    String? storedProfile = _storage.read('student_profile');
+    if (storedProfile != null) {
+      _studentProfile = StudentDetailsModel.fromJson(jsonDecode(storedProfile));
+    }
   }
 
   //Check Token on startup
@@ -65,7 +81,8 @@ class SessionController extends GetxController {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        saveSession(data["access_token"], data["refresh_token"]);
+        saveSession(data["access_token"], data["refresh_token"],
+            _studentProfile?.toJson() ?? {});
       } else {
         logout();
       }

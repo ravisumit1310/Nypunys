@@ -16,7 +16,7 @@ class loginController extends GetxController {
 
     if (resp != null && resp.containsKey('access_token')) {
       sessionController.saveSession(
-          resp['access_token'], resp['refresh_token']);
+          resp['access_token'], resp['refresh_token'], resp['student_profile']);
       return true;
     }
     return false;

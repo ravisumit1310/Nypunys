@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+  ProfilePage({super.key});
+
+  final sessionController = Get.find<SessionController>();
 
   @override
   Widget build(BuildContext context) {
@@ -12,14 +14,14 @@ class ProfilePage extends StatelessWidget {
     // double sheingt = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: CustomAppBar(
+      appBar: const CustomAppBar(
         title: "Student Profile",
         showBackButton: false,
       ),
       body: SingleChildScrollView(
         child: Container(
           width: swidth,
-          padding: EdgeInsets.only(top: 5, left: 0, right: 0, bottom: 15),
+          padding: const EdgeInsets.only(top: 5, left: 0, right: 0, bottom: 15),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -29,12 +31,12 @@ class ProfilePage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(
-                    height: 150,
-                    width: 150,
+                    height: 130,
+                    width: 130,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
-                      child: Center(
-                        child: const Image(
+                      child: const Center(
+                        child: Image(
                           image: AssetImage('assets/images/id_image.jpg'),
                           fit: BoxFit.contain,
                         ),
@@ -45,24 +47,25 @@ class ProfilePage extends StatelessWidget {
                     height: 10,
                   ),
                   Text(
-                    "Name of Child",
-                    style: TextStyle(
+                    sessionController.studentProfile?.name ?? "Loadiong...?",
+                    style: const TextStyle(
                       fontWeight: FontWeight.w800,
                       color: Colors.grey,
                       fontSize: 22,
                     ),
                   ),
                   Text(
-                    "Roll no - 21",
-                    style: TextStyle(
+                    sessionController.studentProfile?.admissionNo ??
+                        "Loading...?",
+                    style: const TextStyle(
                       fontWeight: FontWeight.w600,
                       color: Colors.black87,
                       fontSize: 18,
                     ),
                   ),
                   Text(
-                    "Class - VI 'C'",
-                    style: TextStyle(
+                    sessionController.studentProfile?.email ?? "Loading @@@",
+                    style: const TextStyle(
                       fontWeight: FontWeight.w500,
                       color: Colors.black87,
                       fontSize: 16,
@@ -72,7 +75,7 @@ class ProfilePage extends StatelessWidget {
                     height: 1,
                     color: Colors.grey.shade300,
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                 ],
               ),
 
@@ -82,7 +85,7 @@ class ProfilePage extends StatelessWidget {
                   leading: Container(
                     height: 50,
                     width: 50,
-                    child: Icon(
+                    child: const Icon(
                       Icons.person,
                       color: Colors.purple,
                     ),
@@ -91,8 +94,8 @@ class ProfilePage extends StatelessWidget {
                       color: Colors.grey.withOpacity(0.1),
                     ),
                   ),
-                  title: Text("your Details"),
-                  trailing: Icon(
+                  title: const Text("your Details"),
+                  trailing: const Icon(
                     Icons.navigate_next,
                     color: Colors.black,
                   ),
@@ -110,7 +113,7 @@ class ProfilePage extends StatelessWidget {
                   leading: Container(
                     height: 50,
                     width: 50,
-                    child: Icon(
+                    child: const Icon(
                       Icons.person,
                       color: Colors.purple,
                     ),
@@ -119,8 +122,8 @@ class ProfilePage extends StatelessWidget {
                       color: Colors.grey.withOpacity(0.1),
                     ),
                   ),
-                  title: Text("Parents Section"),
-                  trailing: Icon(
+                  title: const Text("Parents Section"),
+                  trailing: const Icon(
                     Icons.navigate_next,
                     color: Colors.black,
                   ),
@@ -138,7 +141,7 @@ class ProfilePage extends StatelessWidget {
                   leading: Container(
                     height: 50,
                     width: 50,
-                    child: Icon(
+                    child: const Icon(
                       Icons.file_present_rounded,
                       color: Colors.purple,
                     ),
@@ -147,8 +150,8 @@ class ProfilePage extends StatelessWidget {
                       color: Colors.grey.withOpacity(0.1),
                     ),
                   ),
-                  title: Text("School Grades"),
-                  trailing: Icon(
+                  title: const Text("School Grades"),
+                  trailing: const Icon(
                     Icons.navigate_next,
                     color: Colors.black,
                   ),
@@ -166,7 +169,7 @@ class ProfilePage extends StatelessWidget {
                   leading: Container(
                     height: 50,
                     width: 50,
-                    child: Icon(
+                    child: const Icon(
                       Icons.notification_add,
                       color: Colors.purple,
                     ),
@@ -175,8 +178,8 @@ class ProfilePage extends StatelessWidget {
                       color: Colors.grey.withOpacity(0.1),
                     ),
                   ),
-                  title: Text("School Notifications"),
-                  trailing: Icon(
+                  title: const Text("School Notifications"),
+                  trailing: const Icon(
                     Icons.navigate_next,
                     color: Colors.black,
                   ),
@@ -194,7 +197,7 @@ class ProfilePage extends StatelessWidget {
                   leading: Container(
                     height: 50,
                     width: 50,
-                    child: Icon(
+                    child: const Icon(
                       Icons.help,
                       color: Colors.purple,
                     ),
@@ -203,8 +206,8 @@ class ProfilePage extends StatelessWidget {
                       color: Colors.grey.withOpacity(0.1),
                     ),
                   ),
-                  title: Text("Need Help!"),
-                  trailing: Icon(
+                  title: const Text("Need Help!"),
+                  trailing: const Icon(
                     Icons.navigate_next,
                     color: Colors.black,
                   ),
@@ -222,7 +225,7 @@ class ProfilePage extends StatelessWidget {
                   leading: Container(
                     height: 50,
                     width: 50,
-                    child: Icon(
+                    child: const Icon(
                       Icons.logout,
                       color: Colors.purple,
                     ),
@@ -231,8 +234,8 @@ class ProfilePage extends StatelessWidget {
                       color: Colors.grey.withOpacity(0.1),
                     ),
                   ),
-                  title: Text("LogOut"),
-                  trailing: Icon(
+                  title: const Text("LogOut"),
+                  trailing: const Icon(
                     Icons.navigate_next,
                     color: Colors.black,
                   ),
