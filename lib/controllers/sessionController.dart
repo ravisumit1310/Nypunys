@@ -6,6 +6,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/studentDetails_Model.dart';
+import 'logincontroller.dart';
 
 class SessionController extends GetxController {
   final _storage = GetStorage();
@@ -34,7 +35,16 @@ class SessionController extends GetxController {
   StudentDetailsModel? get studentProfile => _studentProfile;
 
   void logout() {
+    String? savedEmail = _storage.read('saved_email');
     _storage.erase();
+    _studentProfile = null;
+    isLoggedIn.value = false;
+
+    // Restore the saved email if it was set
+    if (savedEmail != null && savedEmail.isNotEmpty) {
+      _storage.write('saved_email', savedEmail);
+    }
+
     _studentProfile = null;
     isLoggedIn.value = false;
   }

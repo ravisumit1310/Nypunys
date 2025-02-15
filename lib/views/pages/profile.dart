@@ -47,7 +47,7 @@ class ProfilePage extends StatelessWidget {
                     height: 10,
                   ),
                   Text(
-                    sessionController.studentProfile?.name ?? "Loadiong...?",
+                    sessionController.studentProfile?.name ?? "Token Expired..",
                     style: const TextStyle(
                       fontWeight: FontWeight.w800,
                       color: Colors.grey,
@@ -56,7 +56,7 @@ class ProfilePage extends StatelessWidget {
                   ),
                   Text(
                     sessionController.studentProfile?.admissionNo ??
-                        "Loading...?",
+                        "Login Again",
                     style: const TextStyle(
                       fontWeight: FontWeight.w600,
                       color: Colors.black87,
@@ -64,7 +64,7 @@ class ProfilePage extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    sessionController.studentProfile?.email ?? "Loading @@@",
+                    sessionController.studentProfile?.email ?? " ",
                     style: const TextStyle(
                       fontWeight: FontWeight.w500,
                       color: Colors.black87,

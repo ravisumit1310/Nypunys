@@ -3,6 +3,7 @@ import 'package:academyapp/controllers/sessionController.dart';
 import 'package:http/http.dart' as http;
 
 class ServerConfig {
+  // static const String baseUrl = "http://api.affilings.in";
   static const String baseUrl = "http://192.168.1.9:8000";
   static const Map<String, String> defaultHeaders = {
     'Content-Type': 'application/json',
