@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-
 import '../../models/notficationModel.dart';
-
 import 'dart:ui';
-import 'package:flutter/material.dart';
 
 class NotificationCard extends StatelessWidget {
   final NotificationModel notification;

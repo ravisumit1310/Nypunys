@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'controllers/logincontroller.dart';
+import 'controllers/eventController.dart';
 import 'firebase_options.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -23,7 +23,7 @@ void main() async {
   );
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
+  Get.lazyPut(() => EventController());
   Get.put(SessionController());
   Get.put(ApiService(Get.find<SessionController>()));
 
@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
     final sessionController = Get.find<SessionController>();
 
     return GetMaterialApp(
-      debugShowCheckedModeBanner: false, // ✅ Removes debug banner
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         textTheme: GoogleFonts.notoSansElbasanTextTheme(
           Theme.of(context).textTheme,
@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute:
           sessionController.isLoggedIn.value ? '/bottomFragment' : '/login',
-      getPages: Approutes.routes, // Register routes here
+      getPages: Approutes.routes,
     );
   }
 }

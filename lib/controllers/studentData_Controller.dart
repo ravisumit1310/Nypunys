@@ -24,46 +24,9 @@ class StudentController extends GetxController {
 
       student.value = StudentDetailsModel.fromJson(response);
     } catch (e) {
-      Get.snackbar("Error", "Something went wrong");
+      Get.snackbar("Error", "$e");
     } finally {
       isLoading.value = false;
     }
   }
-
-  // Future<void> fetchStudentDetails() async {
-  //   try {
-  //     isLoading.value = true;
-  //
-  //     final accessToken = Get.find<SessionController>().accessToken;
-  //
-  //     if (accessToken == null) {
-  //       Get.snackbar("Error", "Student is not authenticated");
-  //       return;
-  //     }
-  //
-  //     final url = Uri.parse("${ServerConfig.baseUrl}/student/profile/");
-  //
-  //     final response = await http.get(
-  //       url,
-  //       headers: {
-  //         'Authorization': 'Bearer $accessToken',
-  //         ...ServerConfig.defaultHeaders,
-  //       },
-  //     );
-  //
-  //     if (response.statusCode == 200) {
-  //       final jsonData = jsonDecode(response.body);
-  //       print(jsonData);
-  //       student.value = StudentDetailsModel.fromJson(jsonData);
-  //       print(student.value);
-  //     } else {
-  //       Get.snackbar("Error", "Failed to fetch student details");
-  //     }
-  //   } catch (e) {
-  //     print("Error fetching student details: $e");
-  //     Get.snackbar("Error", "Something went wrong");
-  //   } finally {
-  //     isLoading.value = false;
-  //   }
-  // }
 }

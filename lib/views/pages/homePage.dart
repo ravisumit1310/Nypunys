@@ -53,14 +53,20 @@ class HomePage extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => MessagePage()),
+                              builder: (context) => const MessagePage()),
                         );
                       },
                     ),
-                    _buildGridItem(Icons.calendar_month_sharp, 'Calender',
-                        onTap: () {}),
-                    _buildGridItem(Icons.apps_outage, 'time table',
-                        onTap: () {}),
+                    _buildGridItem(
+                      Icons.calendar_month_sharp,
+                      'Calender',
+                      onTap: () => Get.toNamed('/events'),
+                    ),
+                    _buildGridItem(
+                      Icons.apps_outage,
+                      'time table',
+                      onTap: () => Get.toNamed('/tt'),
+                    ),
                     _buildGridItem(Icons.monetization_on_rounded, 'Fees',
                         onTap: () {}),
                     _buildGridItem(

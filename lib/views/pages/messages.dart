@@ -1,6 +1,8 @@
 import 'package:academyapp/views/fragments/customtabFrag.dart';
 import 'package:flutter/material.dart';
 
+import '../fragments/appbarFrag.dart';
+
 class MessagePage extends StatelessWidget {
   const MessagePage({super.key});
 
@@ -9,9 +11,9 @@ class MessagePage extends StatelessWidget {
     final sheight = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text("Message Page"),
-        backgroundColor: Colors.blue,
+      appBar: const CustomAppBar(
+        title: "Student Profile",
+        showBackButton: false,
       ),
       body: CustomTabFragment(
         tabTitles: ["Private Messages", "Group Messages"],

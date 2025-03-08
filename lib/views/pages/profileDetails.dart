@@ -82,90 +82,40 @@ class StudentProfilePage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    buildInfoRow("Age", student.age.toString()),
+                    buildInfoRow(context, "Age", student.age.toString()),
                     buildDivider(),
                     buildInfoRow(
+                        context,
                         "DOB",
                         DateFormat('dd-MM-yyyy').format(
                             student.dateOfBirth is String
                                 ? DateTime.parse(student.dateOfBirth as String)
                                 : student.dateOfBirth)),
                     buildDivider(),
-                    buildInfoRow("Contact", student.contactNo),
+                    buildInfoRow(context, "Contact", student.contactNo),
                     buildDivider(),
-                    buildInfoRow("Admission No", student.admissionNo),
+                    buildInfoRow(context, "Admission No", student.admissionNo),
                     buildDivider(),
-                    buildInfoRow("Father's Name", student.fathersName),
+                    buildInfoRow(context, "Father's Name", student.fathersName),
                     buildDivider(),
-                    buildInfoRow("Mother's name", student.mothersName),
+                    buildInfoRow(context, "Mother's name", student.mothersName),
                     buildDivider(),
-                    buildInfoRow("Address", student.contactAddress),
+                    buildInfoRow(context, "Address", student.contactAddress),
                     buildDivider(),
-                    buildInfoRow("Father's Number", student.fathersMobile),
+                    buildInfoRow(
+                        context, "Father's Number", student.fathersMobile),
                     buildDivider(),
-                    buildInfoRow("Mother's Number", student.mothersMobile),
+                    buildInfoRow(
+                        context, "Mother's Number", student.mothersMobile),
                     buildDivider(),
-                    buildInfoRow("Blood Group", student.bloodGroup),
+                    buildInfoRow(context, "Blood Group", student.bloodGroup),
+                    buildDivider(),
+                    buildInfoRow(context, "Class", student.className),
                     buildDivider(),
                     const SizedBox(height: 20),
                   ],
                 ),
               ),
-
-              // Container(
-              //   padding: EdgeInsets.all(16),
-              //   child: Column(
-              //     crossAxisAlignment: CrossAxisAlignment.start,
-              //     children: [
-              //       Text(
-              //         "DOB: ${DateFormat('dd-MM-yyyy').format(student.dateOfBirth is String ? DateTime.parse(student.dateOfBirth as String) : student.dateOfBirth)}",
-              //       ),
-              //       SizedBox(height: 8),
-              //       Divider(
-              //         height: 2,
-              //       ),
-              //       SizedBox(height: 8),
-              //       Text("Contact: ${student.contactNo}"),
-              //       SizedBox(height: 8),
-              //       Divider(
-              //         height: 2,
-              //       ),
-              //       SizedBox(height: 8),
-              //       Text("Admission No: ${student.admissionNo}"),
-              //       SizedBox(height: 8),
-              //       Divider(
-              //         height: 2,
-              //       ),
-              //       SizedBox(height: 8),
-              //       Text("Guardian: ${student.guardiansEmail}"),
-              //       SizedBox(height: 8),
-              //       Divider(
-              //         height: 2,
-              //       ),
-              //       SizedBox(height: 8),
-              //       Text("Blood Group: ${student.bloodGroup}"),
-              //       SizedBox(height: 8),
-              //       Divider(
-              //         height: 2,
-              //       ),
-              //       SizedBox(height: 20),
-              //       // Privacy mode switch
-              //       Row(
-              //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //         children: [
-              //           Text(
-              //             'Privacy mode',
-              //             style: TextStyle(fontSize: 16),
-              //           ),
-              //           Switch(
-              //             value: false,
-              //             onChanged: (value) {},
-              //           ),
-              //         ],
-              //       ),
-              //     ],
-              //   ),
-              // ),
             ],
           ),
         );

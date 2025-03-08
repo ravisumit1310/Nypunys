@@ -6,20 +6,24 @@ import 'package:academyapp/views/pages/profile.dart';
 import 'package:academyapp/views/pages/work.dart';
 import 'package:get/get.dart';
 
+import '../views/pages/events.dart';
 import '../views/pages/messages.dart';
 import '../views/pages/profileDetails.dart';
 import '../views/pages/schoolNotification.dart';
+import '../views/pages/timeTable.dart';
 
 class Approutes {
   static final routes = [
     GetPage(name: '/home', page: () => HomePage()),
     GetPage(name: '/login', page: () => LoginPage()),
     GetPage(name: '/profile', page: () => ProfilePage()),
-    GetPage(name: '/work', page: () => HomeWork()),
-    GetPage(name: '/attendance', page: () => AttendancePage()),
-    GetPage(name: '/report', page: () => MessagePage()),
+    GetPage(name: '/work', page: () => const HomeWork()),
+    GetPage(name: '/attendance', page: () => const AttendancePage()),
+    GetPage(name: '/report', page: () => const MessagePage()),
     GetPage(name: '/bottomFragment', page: () => BottomFragment()),
     GetPage(name: '/studentDetails', page: () => StudentProfilePage()),
     GetPage(name: '/schoolNotification', page: () => NotificationsPage()),
+    GetPage(name: '/events', page: () => EventsPage()),
+    GetPage(name: '/tt', page: () => TimetableScreen()),
   ];
 }
