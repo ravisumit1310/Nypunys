@@ -69,8 +69,8 @@ class BottomFragment extends StatelessWidget {
             index: landingPageController.tab.value,
             children: [
               HomePage(),
-              Quiz(),
-              AttendancePage(),
+              QuizListScreen(),
+              const AttendancePage(),
               ProfilePage(),
             ],
           ),

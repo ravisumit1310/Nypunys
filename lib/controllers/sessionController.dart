@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:academyapp/utils/apicServices.dart';
@@ -12,6 +13,7 @@ class SessionController extends GetxController {
   final _storage = GetStorage();
   var isLoggedIn = false.obs;
   StudentDetailsModel? _studentProfile;
+  Timer? _logoutTimer; // ⏳ Timer for auto-logout
 
   @override
   void onInit() {
@@ -25,8 +27,19 @@ class SessionController extends GetxController {
     _storage.write('access_token', accessToken);
     _storage.write('refresh_token', refreshToken);
     _storage.write('student_profile', jsonEncode(studentData));
+    _storage.write('login_time', DateTime.now().millisecondsSinceEpoch);
     _studentProfile = StudentDetailsModel.fromJson(studentData);
     isLoggedIn.value = true;
+
+    _startAutoLogoutTimer();
+  }
+
+  void _startAutoLogoutTimer() {
+    _logoutTimer?.cancel();
+    _logoutTimer = Timer(const Duration(hours: 1), () {
+      logout();
+      Get.snackbar("Session Expired", "You have been logged out after 1 hour.");
+    });
   }
 
   String? get accessToken => _storage.read('access_token');
@@ -45,8 +58,7 @@ class SessionController extends GetxController {
       _storage.write('saved_email', savedEmail);
     }
 
-    _studentProfile = null;
-    isLoggedIn.value = false;
+    Get.offAllNamed('/login');
   }
 
   void loadStudentProfile() {
@@ -61,6 +73,18 @@ class SessionController extends GetxController {
     await Future.delayed(const Duration(microseconds: 500));
 
     String? token = accessToken;
+
+    int? loginTime = _storage.read('login_time');
+    if (loginTime != null) {
+      int elapsedSeconds =
+          (DateTime.now().millisecondsSinceEpoch - loginTime) ~/ 1000;
+      if (elapsedSeconds >= 3600) {
+        logout();
+        return;
+      }
+      _startAutoLogoutTimer();
+    }
+
     if (token == null || !(await isAccessTokenValid(token))) {
       await refreshAccessToken();
     } else {

@@ -72,8 +72,16 @@ class HomePage extends StatelessWidget {
                     _buildGridItem(
                         Icons.directions_bus_filled_outlined, 'Transport',
                         onTap: () {}),
-                    _buildGridItem(Icons.menu_book, 'HomeWork', onTap: () {}),
-                    _buildGridItem(Icons.list_alt, 'Reports', onTap: () {}),
+                    _buildGridItem(
+                      Icons.menu_book,
+                      'HomeWork',
+                      onTap: () => Get.toNamed('/homework'),
+                    ),
+                    _buildGridItem(
+                      Icons.list_alt,
+                      'Reports',
+                      onTap: () => Get.toNamed('/results'),
+                    ),
                     _buildGridItem(Icons.image, 'Gallery', onTap: () {}),
                     _buildGridItem(Icons.headset_mic_rounded, 'Help',
                         onTap: () {})

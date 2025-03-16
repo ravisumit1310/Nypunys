@@ -12,8 +12,8 @@ class MessagePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: const CustomAppBar(
-        title: "Student Profile",
-        showBackButton: false,
+        title: "Messages",
+        showBackButton: true,
       ),
       body: CustomTabFragment(
         tabTitles: ["Private Messages", "Group Messages"],

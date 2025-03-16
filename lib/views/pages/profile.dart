@@ -3,255 +3,277 @@ import 'package:academyapp/views/fragments/appbarFrag.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../controllers/studentData_Controller.dart';
+
 class ProfilePage extends StatelessWidget {
   ProfilePage({super.key});
 
   final sessionController = Get.find<SessionController>();
+  final studentController = Get.put(StudentController());
 
   @override
   Widget build(BuildContext context) {
-    double swidth = MediaQuery.of(context).size.width;
-    // double sheingt = MediaQuery.of(context).size.height;
+    double sWidth = MediaQuery.of(context).size.width;
+
+    // Fetch updated student details when the page is opened
+    studentController.fetchStudentDetails();
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: const CustomAppBar(
         title: "Student Profile",
         showBackButton: false,
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          width: swidth,
-          padding: const EdgeInsets.only(top: 5, left: 0, right: 0, bottom: 15),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              //this is the icon and the name roll thing
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: 130,
-                    width: 130,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(100),
-                      child: const Center(
-                        child: Image(
-                          image: AssetImage('assets/images/id_image.jpg'),
-                          fit: BoxFit.contain,
+      body: Obx(() {
+        if (studentController.isLoading.value) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        final student = studentController.student.value;
+        if (student == null) {
+          return const Center(
+            child: Text(
+              "Session Expired! Please log in again.",
+              style: TextStyle(color: Colors.red, fontSize: 18),
+            ),
+          );
+        }
+
+        return SingleChildScrollView(
+          child: Container(
+            width: sWidth,
+            padding:
+                const EdgeInsets.only(top: 5, left: 0, right: 0, bottom: 15),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                //this is the icon and the name roll thing
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 130,
+                      width: 130,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: const Center(
+                          child: Image(
+                            image: AssetImage('assets/images/id_image.jpg'),
+                            fit: BoxFit.contain,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    sessionController.studentProfile?.name ?? "Token Expired..",
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w800,
-                      color: Colors.grey,
-                      fontSize: 22,
+                    const SizedBox(
+                      height: 10,
                     ),
-                  ),
-                  Text(
-                    sessionController.studentProfile?.admissionNo ??
-                        "Login Again",
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
-                      fontSize: 18,
+                    Text(
+                      student.name ?? "Token Expired",
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w800,
+                        color: Colors.grey,
+                        fontSize: 22,
+                      ),
                     ),
-                  ),
-                  Text(
-                    sessionController.studentProfile?.email ?? " ",
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black87,
-                      fontSize: 16,
+                    Text(
+                      student.admissionNo ?? "No Admission Number",
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87,
+                        fontSize: 18,
+                      ),
                     ),
-                  ),
-                  Divider(
-                    height: 1,
-                    color: Colors.grey.shade300,
-                  ),
-                  const SizedBox(height: 10),
-                ],
-              ),
+                    Text(
+                      student.email ?? "No Email Available",
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black87,
+                        fontSize: 16,
+                      ),
+                    ),
+                    Divider(
+                      height: 1,
+                      color: Colors.grey.shade300,
+                    ),
+                    const SizedBox(height: 10),
+                  ],
+                ),
 
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListTile(
-                  leading: Container(
-                    height: 50,
-                    width: 50,
-                    child: const Icon(
-                      Icons.person,
-                      color: Colors.purple,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(
+                    leading: Container(
+                      height: 50,
+                      width: 50,
+                      child: const Icon(
+                        Icons.person,
+                        color: Colors.purple,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        color: Colors.grey.withOpacity(0.1),
+                      ),
                     ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      color: Colors.grey.withOpacity(0.1),
+                    title: const Text("your Details"),
+                    trailing: const Icon(
+                      Icons.navigate_next,
+                      color: Colors.black,
                     ),
+                    onTap: () => Get.toNamed('/studentDetails'),
                   ),
-                  title: const Text("your Details"),
-                  trailing: const Icon(
-                    Icons.navigate_next,
-                    color: Colors.black,
-                  ),
-                  onTap: () => Get.toNamed('/studentDetails'),
                 ),
-              ),
-              Divider(
-                height: 1,
-                color: Colors.grey.shade300,
-              ),
+                Divider(
+                  height: 1,
+                  color: Colors.grey.shade300,
+                ),
 
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListTile(
-                  leading: Container(
-                    height: 50,
-                    width: 50,
-                    child: const Icon(
-                      Icons.person,
-                      color: Colors.purple,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(
+                    leading: Container(
+                      height: 50,
+                      width: 50,
+                      child: const Icon(
+                        Icons.person,
+                        color: Colors.purple,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        color: Colors.grey.withOpacity(0.1),
+                      ),
                     ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      color: Colors.grey.withOpacity(0.1),
+                    title: const Text("Parents Section"),
+                    trailing: const Icon(
+                      Icons.navigate_next,
+                      color: Colors.black,
                     ),
-                  ),
-                  title: const Text("Parents Section"),
-                  trailing: const Icon(
-                    Icons.navigate_next,
-                    color: Colors.black,
                   ),
                 ),
-              ),
-              Divider(
-                height: 1,
-                color: Colors.grey.shade300,
-              ),
+                Divider(
+                  height: 1,
+                  color: Colors.grey.shade300,
+                ),
 
-              //Grades
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListTile(
-                  leading: Container(
-                    height: 50,
-                    width: 50,
-                    child: const Icon(
-                      Icons.file_present_rounded,
-                      color: Colors.purple,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      color: Colors.grey.withOpacity(0.1),
-                    ),
-                  ),
-                  title: const Text("School Grades"),
-                  trailing: const Icon(
-                    Icons.navigate_next,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-              Divider(
-                height: 1,
-                color: Colors.grey.shade300,
-              ),
+                //Grades
+                // Padding(
+                //   padding: const EdgeInsets.all(8.0),
+                //   child: ListTile(
+                //     leading: Container(
+                //       height: 50,
+                //       width: 50,
+                //       child: const Icon(
+                //         Icons.file_present_rounded,
+                //         color: Colors.purple,
+                //       ),
+                //       decoration: BoxDecoration(
+                //         borderRadius: BorderRadius.circular(100),
+                //         color: Colors.grey.withOpacity(0.1),
+                //       ),
+                //     ),
+                //     title: const Text("School Grades"),
+                //     trailing: const Icon(
+                //       Icons.navigate_next,
+                //       color: Colors.black,
+                //     ),
+                //   ),
+                // ),
+                // Divider(
+                //   height: 1,
+                //   color: Colors.grey.shade300,
+                // ),
 
-              //notification
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListTile(
-                  leading: Container(
-                    height: 50,
-                    width: 50,
-                    child: const Icon(
-                      Icons.notification_add,
-                      color: Colors.purple,
+                //notification
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(
+                    leading: Container(
+                      height: 50,
+                      width: 50,
+                      child: const Icon(
+                        Icons.notification_add,
+                        color: Colors.purple,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        color: Colors.grey.withOpacity(0.1),
+                      ),
                     ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      color: Colors.grey.withOpacity(0.1),
+                    title: const Text("School Notifications"),
+                    trailing: const Icon(
+                      Icons.navigate_next,
+                      color: Colors.black,
                     ),
-                  ),
-                  title: const Text("School Notifications"),
-                  trailing: const Icon(
-                    Icons.navigate_next,
-                    color: Colors.black,
-                  ),
-                  onTap: () => Get.toNamed('/schoolNotification'),
-                ),
-              ),
-              Divider(
-                height: 1,
-                color: Colors.grey.shade300,
-              ),
-              //Help
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListTile(
-                  leading: Container(
-                    height: 50,
-                    width: 50,
-                    child: const Icon(
-                      Icons.help,
-                      color: Colors.purple,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      color: Colors.grey.withOpacity(0.1),
-                    ),
-                  ),
-                  title: const Text("Need Help!"),
-                  trailing: const Icon(
-                    Icons.navigate_next,
-                    color: Colors.black,
+                    onTap: () => Get.toNamed('/schoolNotification'),
                   ),
                 ),
-              ),
-              Divider(
-                height: 1,
-                color: Colors.grey.shade300,
-              ),
+                Divider(
+                  height: 1,
+                  color: Colors.grey.shade300,
+                ),
+                //Help
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(
+                    leading: Container(
+                      height: 50,
+                      width: 50,
+                      child: const Icon(
+                        Icons.help,
+                        color: Colors.purple,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        color: Colors.grey.withOpacity(0.1),
+                      ),
+                    ),
+                    title: const Text("Need Help!"),
+                    trailing: const Icon(
+                      Icons.navigate_next,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+                Divider(
+                  height: 1,
+                  color: Colors.grey.shade300,
+                ),
 
-              //Logout
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListTile(
-                  leading: Container(
-                    height: 50,
-                    width: 50,
-                    child: const Icon(
-                      Icons.logout,
-                      color: Colors.purple,
+                //Logout
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(
+                    leading: Container(
+                      height: 50,
+                      width: 50,
+                      child: const Icon(
+                        Icons.logout,
+                        color: Colors.purple,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        color: Colors.grey.withOpacity(0.1),
+                      ),
                     ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      color: Colors.grey.withOpacity(0.1),
+                    title: const Text("LogOut"),
+                    trailing: const Icon(
+                      Icons.navigate_next,
+                      color: Colors.black,
                     ),
+                    onTap: () {
+                      final logoutService = SessionController();
+                      // Perform logout -> which is in the apicServices
+                      logoutService.logout();
+                      // Navigate to the login page using GetX route
+                      Get.offNamed('/login');
+                    },
                   ),
-                  title: const Text("LogOut"),
-                  trailing: const Icon(
-                    Icons.navigate_next,
-                    color: Colors.black,
-                  ),
-                  onTap: () {
-                    final logoutService = SessionController();
-                    // Perform logout -> which is in the apicServices
-                    logoutService.logout();
-                    // Navigate to the login page using GetX route
-                    Get.offNamed('/login');
-                  },
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 }
