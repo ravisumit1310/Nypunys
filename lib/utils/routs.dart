@@ -3,6 +3,7 @@ import 'package:academyapp/views/pages/attendance.dart';
 import 'package:academyapp/views/pages/authpage.dart';
 import 'package:academyapp/views/pages/homePage.dart';
 import 'package:academyapp/views/pages/profile.dart';
+import 'package:academyapp/views/widget/startingPage.dart';
 import 'package:get/get.dart';
 
 import '../views/pages/events.dart';
@@ -18,14 +19,15 @@ class Approutes {
     GetPage(name: '/home', page: () => HomePage()),
     GetPage(name: '/login', page: () => LoginPage()),
     GetPage(name: '/profile', page: () => ProfilePage()),
-    GetPage(name: '/attendance', page: () => const AttendancePage()),
+    GetPage(name: '/attendance', page: () => AttendancePage()),
     GetPage(name: '/report', page: () => const MessagePage()),
     GetPage(name: '/bottomFragment', page: () => BottomFragment()),
     GetPage(name: '/studentDetails', page: () => StudentProfilePage()),
     GetPage(name: '/schoolNotification', page: () => NotificationsPage()),
     GetPage(name: '/events', page: () => EventsPage()),
-    GetPage(name: '/tt', page: () => const TimetableScreen()),
+    GetPage(name: '/tt', page: () => TimetableScreen()),
     GetPage(name: '/results', page: () => ExamResultsScreen()),
     GetPage(name: '/homework', page: () => HomeworkRankingPage()),
+    GetPage(name: '/landing', page: () => LandingPage()),
   ];
 }

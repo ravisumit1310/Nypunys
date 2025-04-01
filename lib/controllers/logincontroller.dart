@@ -30,7 +30,6 @@ class LoginController extends GetxController {
     }
   }
 
-  // Save or remove email based on "Remember Me" checkbox
   void saveEmail() {
     if (rememberMe.value) {
       storage.write('saved_email', emailController.text.trim());
@@ -81,28 +80,6 @@ class LoginController extends GetxController {
     }
   }
 
-  // // 🔹 Login Method (API Call)
-  // Future<bool> login(String id, String password) async {
-  //   final apiService = Get.find<ApiService>();
-  //   var resp = await apiService.post('/student/login/', {
-  //     'id': id,
-  //     'password': password,
-  //   });
-  //
-  //   if (resp != null && resp.containsKey('access_token')) {
-  //     sessionController.saveSession(
-  //       resp['access_token'],
-  //       resp['refresh_token'],
-  //       resp['student_profile'],
-  //     );
-  //
-  //     saveEmail();
-  //     return true;
-  //   }
-  //   return false;
-  // }
-
-  // 🔹 Snackbar function to show messages
   void showSnackbar(String title, String message, Color color) {
     Get.snackbar(
       title,
@@ -116,22 +93,3 @@ class LoginController extends GetxController {
     );
   }
 }
-
-// class loginController extends GetxController {
-//   final sessionController = Get.find<SessionController>();
-//
-//   Future<bool> login(String id, String password) async {
-//     final apiService = Get.find<ApiService>();
-//     var resp = await apiService.post('/student/login/', {
-//       'id': id,
-//       'password': password,
-//     });
-//
-//     if (resp != null && resp.containsKey('access_token')) {
-//       sessionController.saveSession(
-//           resp['access_token'], resp['refresh_token'], resp['student_profile']);
-//       return true;
-//     }
-//     return false;
-//   }
-// }

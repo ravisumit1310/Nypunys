@@ -1,3 +1,4 @@
+import 'package:academyapp/utils/appTheme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -14,7 +15,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.blue,
       elevation: 4,
       leading: showBackButton
           ? IconButton(
@@ -24,18 +25,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               },
               icon: const Icon(
                 Icons.arrow_back_ios,
-                color: Colors.black,
+                color: AppColors.surface,
               ))
           : const Icon(
               Icons.account_circle,
-              color: Colors.black,
+              color: AppColors.surface,
             ),
       title: Text(
         title,
         style: GoogleFonts.itim(
-          fontSize: 28,
-          fontWeight: FontWeight.bold,
-        ),
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
+            color: AppColors.surface),
       ),
     );
   }

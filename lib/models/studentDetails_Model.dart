@@ -1,4 +1,5 @@
 class StudentDetailsModel {
+  int id;
   String name;
   String email;
   int classId;
@@ -59,12 +60,13 @@ class StudentDetailsModel {
   String pediatricianName;
   String pediatricianContact;
   String password;
-  String className; // ✅ Fixed casing
+  String className;
   String section;
   int adminId;
   int teacherId;
 
   StudentDetailsModel({
+    required this.id,
     required this.name,
     required this.email,
     required this.classId,
@@ -133,6 +135,7 @@ class StudentDetailsModel {
 
   factory StudentDetailsModel.fromJson(Map<String, dynamic> json) {
     return StudentDetailsModel(
+      id: json["id"] ?? "",
       name: json["name"] ?? "",
       email: json["email"] ?? "",
       classId: json["class_id"] ?? 0,
@@ -210,6 +213,7 @@ class StudentDetailsModel {
   }
 
   Map<String, dynamic> toJson() => {
+        "id": id,
         "name": name,
         "email": email,
         "class_id": classId,

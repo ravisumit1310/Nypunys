@@ -70,7 +70,7 @@ class BottomFragment extends StatelessWidget {
             children: [
               HomePage(),
               QuizListScreen(),
-              const AttendancePage(),
+              AttendancePage(),
               ProfilePage(),
             ],
           ),

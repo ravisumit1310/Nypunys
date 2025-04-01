@@ -1,12 +1,10 @@
-import 'package:academyapp/views/fragments/appbarFrag.dart';
+import 'package:academyapp/utils/appTheme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../controllers/HwController.dart';
 import '../../models/HwModel.dart';
-import '../fragments/HomeworkListView.dart';
 import '../fragments/RankingListView.dart';
-import '../widget/HwCard.dart';
 
 class HomeworkRankingPage extends StatelessWidget {
   final HomeworkController homeworkController = Get.put(HomeworkController());
@@ -16,18 +14,26 @@ class HomeworkRankingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
-        title: "HomeWork & Rankings",
-        showBackButton: true,
+      backgroundColor: Colors.blue[50],
+      appBar: AppBar(
+        backgroundColor: Colors.blue,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Get.back(),
+        ),
+        title:
+            Text('HomeWork & Rankings', style: TextStyle(color: Colors.white)),
       ),
       body: Obx(() {
         if (homeworkController.isLoading.value) {
           return const Center(child: CircularProgressIndicator());
         }
-
-        return homeworkController.showHomework.value
-            ? HomeworkListView()
-            : RankingListView();
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: homeworkController.showHomework.value
+              ? HomeworkListView()
+              : RankingListView(),
+        );
       }),
       floatingActionButton: Obx(() => FloatingActionButton.extended(
             onPressed: () {
@@ -47,6 +53,26 @@ class HomeworkRankingPage extends StatelessWidget {
   }
 }
 
+class HomeworkListView extends StatelessWidget {
+  final HomeworkController homeworkController = Get.find<HomeworkController>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      if (homeworkController.homeworkList.isEmpty) {
+        return const Center(child: Text("No homework available"));
+      }
+      return ListView.builder(
+        itemCount: homeworkController.homeworkList.length,
+        itemBuilder: (context, index) {
+          final homework = homeworkController.homeworkList[index];
+          return HomeworkCard(homework: homework);
+        },
+      );
+    });
+  }
+}
+
 class HomeworkCard extends StatelessWidget {
   final Homework homework;
 
@@ -54,67 +80,101 @@ class HomeworkCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        showDialog(
-          context: context,
-          builder: (context) => HomeworkDetailPopup(homework: homework),
-        );
-      },
-      child: Card(
-        margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        child: ListTile(
-          leading: CircleAvatar(
-            backgroundColor: Colors.blueAccent,
-            child: Icon(Icons.book, color: Colors.white),
-          ),
-          title: Text(homework.subject.toString(),
-              style: TextStyle(fontWeight: FontWeight.bold)),
-          subtitle: Text(homework.description.toString()),
-          trailing: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Chip(
-                label: Text(homework.status.toString()),
-                backgroundColor: getStatusColor(homework.status.toString()),
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      margin: EdgeInsets.only(bottom: 16),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.blue[100],
+                borderRadius: BorderRadius.circular(5),
               ),
-              SizedBox(width: 8), // Space between chip and icon
-              getStatusIcon(homework.status.toString()),
-            ],
-          ),
+              child: Text(
+                homework.subject.toString(),
+                style: TextStyle(
+                  color: Colors.blue[800],
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                ),
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              homework.description.toString(),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+            SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Assign Date',
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 14,
+                  ),
+                ),
+                Text(
+                  homework.assignedDate.toString(),
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 4),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Last Submission Date',
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 14,
+                  ),
+                ),
+                // Text(
+                //   homework.lastSubmissionDate,
+                //   style: TextStyle(
+                //     color: Colors.black,
+                //     fontSize: 14,
+                //     fontWeight: FontWeight.w500,
+                //   ),
+                //),
+              ],
+            ),
+            SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.blue,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                minimumSize: Size(double.infinity, 36),
+              ),
+              child: Text(
+                'TO BE SUBMITTED',
+                style: TextStyle(
+                  color: AppColors.surface,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
-  }
-
-  // ✅ Function to get the status color
-  Color? getStatusColor(String status) {
-    switch (status) {
-      case "PENDING":
-        return Colors.yellow[100];
-      case "DONE":
-        return Colors.green[100];
-      case "NOT DONE":
-        return Colors.red[100];
-      default:
-        return Colors.grey[200];
-    }
-  }
-
-  // ✅ Function to get the corresponding status icon
-  Icon getStatusIcon(String status) {
-    switch (status) {
-      case "PENDING":
-        return Icon(Icons.access_time,
-            color: Colors.yellow[700]); // Yellow clock
-      case "DONE":
-        return Icon(Icons.check_circle,
-            color: Colors.green[700]); // Green check
-      case "NOT DONE":
-        return Icon(Icons.error, color: Colors.red[700]); // Red exclamation
-      default:
-        return Icon(Icons.help_outline, color: Colors.grey); // Default icon
-    }
   }
 }

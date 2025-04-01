@@ -46,6 +46,8 @@ dependencies:
   fl_chart: ^0.70.2
   percent_indicator: ^4.2.4
   lucide_icons: ^0.257.0
+  flutter_keyboard_visibility: ^6.0.0
+  keyboard_visibility_pro: ^1.0.0
 
 
   # The following adds the Cupertino Icons font to your application.

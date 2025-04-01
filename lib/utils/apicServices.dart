@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 class ServerConfig {
   // static const String baseUrl =
   //     "https://nse-nypunya-service-1054208070778.asia-south1.run.app";
-  static const String baseUrl = "http://192.168.1.3:8000";
+  static const String baseUrl = "http://192.168.1.2:8000";
   static const Map<String, String> defaultHeaders = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -49,12 +49,20 @@ class ApiService {
   }
 
   dynamic handleResponse(http.Response resp) {
+    print("🔍 API Response Status Code: ${resp.statusCode}");
+    print("🔍 API Response Body: ${resp.body}");
+
     if (resp.statusCode == 200) {
       return jsonDecode(resp.body);
     } else if (resp.statusCode == 401) {
       _session.logout();
+      return {"error": "Unauthorized - Session expired"};
     } else {
-      return {"error", "Something wrong in apiService handle response"};
+      return {
+        "error": "Something wrong in apiService handle response",
+        "status_code": resp.statusCode,
+        "response_body": resp.body
+      };
     }
   }
 }

@@ -16,15 +16,19 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await GetStorage.init();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
   Get.lazyPut(() => EventController());
-  Get.put(SessionController());
+  await Get.putAsync(() async {
+    final session = SessionController();
+    await Future.delayed(const Duration(milliseconds: 500));
+    return session;
+  });
   Get.put(ApiService(Get.find<SessionController>()));
 
   runApp(MyApp());
@@ -43,7 +47,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       initialRoute:
-          sessionController.isLoggedIn.value ? '/bottomFragment' : '/login',
+          sessionController.isLoggedIn.value ? '/bottomFragment' : '/landing',
       getPages: Approutes.routes,
     );
   }
