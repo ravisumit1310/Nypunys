@@ -48,6 +48,21 @@ class ApiService {
     return handleResponse(resp);
   }
 
+  Future put(String endpoint, Map<String, dynamic> body) async {
+    await _checkValidToken();
+    final url = Uri.parse('${ServerConfig.baseUrl}$endpoint');
+
+    final resp = await http.put(
+      url,
+      headers: {
+        'Authorization': 'Bearer ${_session.accessToken}',
+        ...ServerConfig.defaultHeaders,
+      },
+      body: jsonEncode(body),
+    );
+    return handleResponse(resp);
+  }
+
   dynamic handleResponse(http.Response resp) {
     print("🔍 API Response Status Code: ${resp.statusCode}");
     print("🔍 API Response Body: ${resp.body}");

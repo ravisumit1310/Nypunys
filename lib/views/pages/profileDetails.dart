@@ -5,10 +5,15 @@ import 'package:academyapp/views/widget/refreshWrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../controllers/passwordChange_Controller.dart';
 import '../../controllers/studentData_Controller.dart';
+import '../widget/profileEditPopup.dart';
 
 class StudentProfilePage extends StatelessWidget {
   final StudentController studentController = Get.put(StudentController());
+  final ProfileUpdateController profileController =
+      Get.put(ProfileUpdateController());
+  //await profileController.updateProfile();
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +22,7 @@ class StudentProfilePage extends StatelessWidget {
 
     return BaseScreen(
       title: "Student Profile",
+      showBottomImage: false,
       child: Obx(() {
         if (studentController.isLoading.value) {
           return const Center(child: CircularProgressIndicator());
@@ -111,8 +117,7 @@ class StudentProfilePage extends StatelessWidget {
                           ),
                           SizedBox(height: 10),
                           Container(
-                            padding: EdgeInsets.only(
-                                bottom: 3), // Spacing between text and line
+                            padding: EdgeInsets.only(bottom: 3),
                             decoration: BoxDecoration(
                               border: Border(
                                 bottom: BorderSide(
@@ -269,102 +274,155 @@ class StudentProfilePage extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               buildLabeledRow(
-                label: "Father's Name",
-                value: student.fathersName ?? student.guardiansName ?? "NA",
+                label: "Name",
+                value: student.name ?? "NA",
+                fieldKey: "name",
+                onEdit: null,
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
+              buildLabeledRow(
+                label: "Registerd WhatsApp No.",
+                value: student.whatsappNo ?? "NA",
+                fieldKey: "whatsApp_no",
+                onEdit: (label, fieldKey, currentValue) =>
+                    showEditPopupCard(context, label, fieldKey, currentValue),
+              ),
+              const SizedBox(height: 20),
+              buildLabeledRow(
+                label: "Your Mail ID",
+                value: student.email ?? "NA",
+                fieldKey: "mail",
+                onEdit: (label, fieldKey, currentValue) =>
+                    showEditPopupCard(context, label, fieldKey, currentValue),
+              ),
+              const SizedBox(height: 20),
+              buildLabeledRow(
+                label: "Father's Name",
+                value: student.fathersName ?? "NA",
+                fieldKey: "father_name",
+                onEdit: null,
+              ),
+              const SizedBox(height: 20),
+              buildLabeledRow(
+                label: "Father's Email",
+                value: student.email ?? "NA",
+                fieldKey: "father_email",
+                onEdit: (label, fieldKey, currentValue) =>
+                    showEditPopupCard(context, label, fieldKey, currentValue),
+              ),
+              const SizedBox(height: 20),
               buildLabeledRow(
                 label: "Mother's Name",
-                value: student.mothersName ?? student.guardiansName ?? "NA",
+                value: student.mothersName ?? "NA",
+                fieldKey: "mother_name",
+                onEdit: null,
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               buildLabeledRow(
-                label: "Parent's Mail",
-                value: student.fathersEmail ?? student.guardiansEmail ?? "NA",
+                label: "Mother's Mail",
+                value: student.mothersEmail ?? "NA",
+                fieldKey: "mother_mail",
+                onEdit: null,
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               buildLabeledRow(
-                label: "Permanent Address",
-                value: student.permanentAddress ?? "NA",
+                label: "Father's Mobile No.",
+                value: student.fathersMobile ?? "NA",
+                fieldKey: "father_mobile",
+                onEdit: (label, fieldKey, currentValue) =>
+                    showEditPopupCard(context, label, fieldKey, currentValue),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               buildLabeledRow(
-                label: "Contact Address",
-                value: student.contactAddress ?? "NA",
+                label: "Mother's Mobile No.",
+                value: student.mothersMobile ?? "NA",
+                fieldKey: "mother_mobile",
+                onEdit: (label, fieldKey, currentValue) =>
+                    showEditPopupCard(context, label, fieldKey, currentValue),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               buildLabeledRow(
-                label: "Language Known",
-                value: student.languagesKnown ?? "NA",
+                label: "Guardian's Mobile No.",
+                value: student.guardiansMobile ?? "NA",
+                fieldKey: "father_mobile",
+                onEdit: null,
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               buildLabeledRow(
                 label: "Father's Occupation",
                 value: student.fathersOccupation ?? "NA",
+                fieldKey: "father_occupation",
+                onEdit: null,
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               buildLabeledRow(
                 label: "Mother's Occupation",
                 value: student.mothersOccupation ?? "NA",
+                fieldKey: "mother_occupation",
+                onEdit: null,
+              ),
+              const SizedBox(height: 20),
+              buildLabeledRow(
+                label: "Parmanent Address",
+                value: student.permanentAddress ?? "NA",
+                fieldKey: "parmanent_Add",
+                onEdit: null,
+              ),
+              const SizedBox(height: 20),
+              buildLabeledRow(
+                label: "Contact Address",
+                value: student.contactAddress ?? "NA",
+                fieldKey: "contact_Add",
+                onEdit: (label, fieldKey, currentValue) =>
+                    showEditPopupCard(context, label, fieldKey, currentValue),
               ),
             ],
           ),
         );
       }),
-      showBottomImage: false,
     );
   }
 
-  Widget buildLabeledRow({required String label, required String value}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: AppColors.textSecondary,
-          ),
-        ),
-        SizedBox(height: 10),
-        Container(
-          width: double.infinity,
-          padding: EdgeInsets.only(bottom: 3),
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                color: AppColors.textSecondary,
-                width: 1,
-              ),
+  void showEditPopupCard(
+    BuildContext context,
+    String label,
+    String fieldKey,
+    String currentValue,
+  ) {
+    final TextEditingController controller =
+        TextEditingController(text: currentValue);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Edit $label"),
+          content: TextField(
+            controller: controller,
+            decoration: InputDecoration(
+              labelText: "Enter new $label",
             ),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Text(
-                  value,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  overflow: TextOverflow.ellipsis, // Prevents text overflow
-                  maxLines: 1,
-                  softWrap: false,
-                ),
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.lock_open_outlined,
-                  color: AppColors.textSecondary,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text("Cancel"),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                String newValue = controller.text.trim();
+
+                if (newValue.isNotEmpty) {
+                  await profileController.updateProfile(fieldKey, newValue);
+                  Navigator.of(context).pop();
+                  await studentController.fetchStudentDetails();
+                }
+              },
+              child: const Text("Update"),
+            ),
+          ],
+        );
+      },
     );
   }
 }

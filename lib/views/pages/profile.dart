@@ -2,6 +2,7 @@ import 'package:academyapp/controllers/sessionController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../utils/appTheme.dart';
+import '../fragments/changePasswordCard.dart';
 
 class ProfilePage extends StatelessWidget {
   ProfilePage({super.key});
@@ -146,33 +147,44 @@ class ProfilePage extends StatelessWidget {
                   color: Colors.grey.shade300,
                 ),
 
-                //Grades
-                // Padding(
-                //   padding: const EdgeInsets.all(8.0),
-                //   child: ListTile(
-                //     leading: Container(
-                //       height: 50,
-                //       width: 50,
-                //       child: const Icon(
-                //         Icons.file_present_rounded,
-                //         color: Colors.purple,
-                //       ),
-                //       decoration: BoxDecoration(
-                //         borderRadius: BorderRadius.circular(100),
-                //         color: Colors.grey.withOpacity(0.1),
-                //       ),
-                //     ),
-                //     title: const Text("School Grades"),
-                //     trailing: const Icon(
-                //       Icons.navigate_next,
-                //       color: Colors.black,
-                //     ),
-                //   ),
-                // ),
-                // Divider(
-                //   height: 1,
-                //   color: Colors.grey.shade300,
-                // ),
+                //Password
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(
+                    leading: Container(
+                      height: 50,
+                      width: 50,
+                      child: const Icon(
+                        Icons.password,
+                        color: Colors.purple,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        color: Colors.grey.withOpacity(0.1),
+                      ),
+                    ),
+                    title: const Text("Change Password"),
+                    trailing: const Icon(
+                      Icons.navigate_next,
+                      color: Colors.black,
+                    ),
+                    onTap: () {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.vertical(top: Radius.circular(20)),
+                        ),
+                        builder: (context) => ChangePasswordCard(),
+                      );
+                    },
+                  ),
+                ),
+                Divider(
+                  height: 1,
+                  color: Colors.grey.shade300,
+                ),
 
                 //notification
                 Padding(

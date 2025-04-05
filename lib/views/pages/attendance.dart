@@ -4,145 +4,7 @@ import 'package:get/get.dart';
 import '../../controllers/attendance_Controller.dart';
 import '../../models/attendance_Model.dart';
 import '../widget/BaseScreen.dart';
-
-// class AttendancePage extends StatelessWidget {
-//   AttendancePage();
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     final AttendanceController controller = Get.put(AttendanceController());
-//
-//     return BaseScreen(
-//       title: "Attendance",
-//       child: Obx(() {
-//         if (controller.isLoading.value) {
-//           return Center(child: CircularProgressIndicator());
-//         }
-//
-//         final AttendanceModel? attendanceData = controller.attendanceData.value;
-//         if (attendanceData == null) {
-//           return Center(child: Text("No attendance data available"));
-//         }
-//
-//         return Column(
-//           children: [
-//             // 🔹 Month Selector
-//             Padding(
-//               padding: const EdgeInsets.symmetric(vertical: 12.0),
-//               child: Row(
-//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                 children: [
-//                   Icon(Icons.chevron_left),
-//                   Text(
-//                     'March 2025',
-//                     style:
-//                         TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-//                   ),
-//                   Icon(Icons.chevron_right),
-//                 ],
-//               ),
-//             ),
-//             SizedBox(height: 8.0),
-//
-//             // 🔹 Calendar Grid
-//             GridView.builder(
-//               shrinkWrap: true,
-//               physics: NeverScrollableScrollPhysics(),
-//               itemCount: 31,
-//               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-//                 crossAxisCount: 7,
-//                 childAspectRatio: 1.2,
-//               ),
-//               itemBuilder: (context, index) {
-//                 String day = (index + 1).toString().padLeft(2, '0');
-//                 String date = "2025-03-$day";
-//
-//                 Color bgColor = Colors.transparent;
-//                 Color textColor = Colors.black;
-//
-//                 // 🟥 Mark Absent Days (Red)
-//                 if (attendanceData.absentDates.contains(date)) {
-//                   bgColor = Colors.red[500]!;
-//                   textColor = Colors.white;
-//                 }
-//                 // 🟨 Mark Late Days (Yellow)
-//                 else if (attendanceData.lateDates.contains(date)) {
-//                   bgColor = Colors.yellow[700]!;
-//                 }
-//
-//                 return Center(
-//                   child: Container(
-//                     width: 30.0,
-//                     height: 30.0,
-//                     decoration: BoxDecoration(
-//                       color: bgColor,
-//                       shape: BoxShape.circle,
-//                     ),
-//                     child: Center(
-//                       child: Text(
-//                         day,
-//                         style: TextStyle(color: textColor, fontSize: 14.0),
-//                       ),
-//                     ),
-//                   ),
-//                 );
-//               },
-//             ),
-//
-//             SizedBox(height: 12),
-//
-//             // 🔹 Scrollable List of Absences & Late Days
-//             Expanded(
-//               child: Container(
-//                 padding: EdgeInsets.all(12),
-//                 decoration: BoxDecoration(
-//                   color: AppColors.background, // Light background
-//                   borderRadius: BorderRadius.circular(12),
-//                   // border: Border.all(color: AppColors.error),
-//                 ),
-//                 child: SingleChildScrollView(
-//                   child: Column(
-//                     crossAxisAlignment: CrossAxisAlignment.start,
-//                     children: [
-//                       // ❌ Absent Days
-//                       if (attendanceData.absentDates.isNotEmpty) ...[
-//                         Text("❌ Absent Days",
-//                             style: TextStyle(
-//                                 fontSize: 18, fontWeight: FontWeight.bold)),
-//                         SizedBox(height: 6),
-//                         ...attendanceData.absentDates.map((date) => ListTile(
-//                               leading: Icon(Icons.cancel, color: Colors.red),
-//                               title: Text("Absent on $date"),
-//                             )),
-//                         Divider(),
-//                       ],
-//
-//                       // ⚠️ Late Days
-//                       if (attendanceData.lateDates.isNotEmpty) ...[
-//                         Text("⚠️ Late Days",
-//                             style: TextStyle(
-//                                 fontSize: 18, fontWeight: FontWeight.bold)),
-//                         SizedBox(height: 6),
-//                         ...attendanceData.lateDates.map((date) => ListTile(
-//                               leading:
-//                                   Icon(Icons.access_time, color: Colors.orange),
-//                               title: Text("Late on $date"),
-//                             )),
-//                       ],
-//                     ],
-//                   ),
-//                 ),
-//               ),
-//             ),
-//           ],
-//         );
-//       }),
-//     );
-//   }
-// }
-
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class AttendancePage extends StatelessWidget {
   AttendancePage();
@@ -163,9 +25,12 @@ class AttendancePage extends StatelessWidget {
           return Center(child: Text("No attendance data available"));
         }
 
+        DateTime now = DateTime.now();
+        String formattedMonth = DateFormat('MMMM yyyy').format(now);
+
         return Column(
           children: [
-            // 🔹 Month Selector
+            // 🔹 Month Selector (Dynamic Month)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 12.0),
               child: Row(
@@ -173,7 +38,7 @@ class AttendancePage extends StatelessWidget {
                 children: [
                   Icon(Icons.chevron_left),
                   Text(
-                    'March 2025',
+                    formattedMonth, // Dynamic Month
                     style:
                         TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                   ),
@@ -187,14 +52,15 @@ class AttendancePage extends StatelessWidget {
             GridView.builder(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
-              itemCount: 31,
+              itemCount: 31, // Maximum days
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 7,
+                crossAxisCount: 7, // 7 days a week
                 childAspectRatio: 1.2,
               ),
               itemBuilder: (context, index) {
                 String day = (index + 1).toString().padLeft(2, '0');
-                String date = "2025-03-$day";
+                String date =
+                    "${now.year}-${now.month.toString().padLeft(2, '0')}-$day";
 
                 Color bgColor = Colors.transparent;
                 Color textColor = Colors.black;
@@ -230,11 +96,12 @@ class AttendancePage extends StatelessWidget {
 
             SizedBox(height: 12),
 
+            // 🔹 Attendance Summary
             Expanded(
               child: Container(
                 padding: EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: AppColors.background, // Light background
+                  color: AppColors.background,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: SingleChildScrollView(
@@ -279,7 +146,7 @@ class AttendancePage extends StatelessWidget {
           ],
         );
       }),
-      showBackButton: false,
+      showBackButton: true, // ✅ Show back button
     );
   }
 
