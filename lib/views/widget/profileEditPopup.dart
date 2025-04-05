@@ -73,8 +73,7 @@ Widget buildLabeledRow({
   required String label,
   required String value,
   required String fieldKey,
-  void Function(String label, String fieldKey, String currentValue)?
-      onEdit, // <-- nullable
+  void Function(String label, String fieldKey, String currentValue)? onEdit,
 }) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,7 +99,6 @@ Widget buildLabeledRow({
           ),
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
               child: Text(
@@ -114,19 +112,21 @@ Widget buildLabeledRow({
                 softWrap: false,
               ),
             ),
-            if (onEdit != null)
-              IconButton(
-                onPressed: () => onEdit(label, fieldKey, value),
-                icon: const Icon(
-                  Icons.lock_open_outlined,
-                  color: AppColors.textSecondary,
-                ),
-              )
-            else
-              const Icon(
-                Icons.lock_outline, // locked & not editable
-                color: AppColors.textSecondary,
+            const SizedBox(width: 8),
+            SizedBox(
+              width: 40, // fixed width for icon alignment
+              child: Center(
+                child: onEdit != null
+                    ? IconButton(
+                        onPressed: () => onEdit(label, fieldKey, value),
+                        icon: const Icon(
+                          Icons.lock_open_outlined,
+                          color: AppColors.textSecondary,
+                        ),
+                      )
+                    : Text(""),
               ),
+            ),
           ],
         ),
       ),
