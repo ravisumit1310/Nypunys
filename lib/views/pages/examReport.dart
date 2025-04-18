@@ -2,8 +2,6 @@ import 'package:academyapp/views/fragments/appbarFrag.dart';
 import 'package:academyapp/views/widget/BaseScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../../controllers/logincontroller.dart';
 import '../../controllers/resultController.dart';
 import '../../controllers/studentData_Controller.dart';
 import '../../utils/appTheme.dart';
@@ -19,10 +17,12 @@ class ExamResultsScreen extends StatelessWidget {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.height;
 
-    final student = studentController.student.value;
+    // final student = studentController.student.value;
 
     return Scaffold(
       body: Obx(() {
+        final student = studentController.student.value?.name;
+
         if (controller.isLoading.value) {
           return const Center(child: CircularProgressIndicator());
         }
@@ -98,7 +98,7 @@ class ExamResultsScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "Hi ${student?.name}",
+                            "Hi ${student ?? ""}",
                             style: TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.bold),
                           ),

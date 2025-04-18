@@ -104,9 +104,12 @@ class HomePage extends StatelessWidget {
                         Colors.orangeAccent,
                         onTap: () => Get.toNamed('/tt'),
                       ),
-                      _buildGridItem(Icons.screen_search_desktop, 'Attendance',
-                          Colors.green,
-                          onTap: () {}),
+                      _buildGridItem(
+                        Icons.screen_search_desktop,
+                        'Attendance',
+                        Colors.green,
+                        onTap: () => Get.toNamed('/attendance'),
+                      ),
                       _buildGridItem(Icons.directions_bus_filled_outlined,
                           'Transport', Colors.pinkAccent,
                           onTap: () {}),
@@ -125,8 +128,7 @@ class HomePage extends StatelessWidget {
                       _buildGridItem(
                           Icons.image, 'Gallery', Colors.lightBlueAccent,
                           onTap: () {}),
-                      _buildGridItem(
-                          Icons.headset_mic_rounded, 'Fee', Colors.green,
+                      _buildGridItem(Icons.currency_rupee, 'Fee', Colors.green,
                           onTap: () {})
                     ],
                   ),
@@ -136,56 +138,6 @@ class HomePage extends StatelessWidget {
           ),
         ),
       ),
-
-      // Floating Action Button
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     showModalBottomSheet(
-      //       context: context,
-      //       isScrollControlled: true, // Allow full-screen height if needed
-      //       shape: RoundedRectangleBorder(
-      //         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      //       ),
-      //       builder: (context) {
-      //         return CustomBottomSheet(
-      //           options: [
-      //             {
-      //               "icon": Icons.group,
-      //               "label": "Chat",
-      //               "onTap": () {
-      //                 Navigator.push(
-      //                   context,
-      //                   MaterialPageRoute(builder: (context) => MessagePage()),
-      //                 );
-      //               },
-      //             },
-      //             {
-      //               "icon": Icons.event,
-      //               "label": "Events",
-      //               "onTap": () {
-      //                 Navigator.push(
-      //                   context,
-      //                   MaterialPageRoute(builder: (context) => MessagePage()),
-      //                 );
-      //               },
-      //             },
-      //             {
-      //               "icon": Icons.share,
-      //               "label": "Invite",
-      //               "onTap": () {
-      //                 Navigator.push(
-      //                   context,
-      //                   MaterialPageRoute(builder: (context) => MessagePage()),
-      //                 );
-      //               },
-      //             },
-      //           ],
-      //         );
-      //       },
-      //     );
-      //   },
-      //   child: Icon(Icons.add),
-      // ),
     );
   }
 

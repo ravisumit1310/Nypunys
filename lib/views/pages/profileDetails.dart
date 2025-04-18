@@ -1,7 +1,6 @@
 import 'package:academyapp/utils/appTheme.dart';
 import 'package:academyapp/views/fragments/formatDate.dart';
 import 'package:academyapp/views/widget/BaseScreen.dart';
-import 'package:academyapp/views/widget/refreshWrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

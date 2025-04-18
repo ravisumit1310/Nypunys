@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import '../../controllers/HwController.dart';
 import '../../models/HwModel.dart';
 import '../fragments/RankingListView.dart';
+import '../widget/BaseScreen.dart';
 
 class HomeworkRankingPage extends StatelessWidget {
   final HomeworkController homeworkController = Get.put(HomeworkController());
@@ -13,28 +14,8 @@ class HomeworkRankingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.blue[50],
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Get.back(),
-        ),
-        title:
-            Text('HomeWork & Rankings', style: TextStyle(color: Colors.white)),
-      ),
-      body: Obx(() {
-        if (homeworkController.isLoading.value) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        return Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: homeworkController.showHomework.value
-              ? HomeworkListView()
-              : RankingListView(),
-        );
-      }),
+    return BaseScreen(
+      title: "HomeWork & Rankings",
       floatingActionButton: Obx(() => FloatingActionButton.extended(
             onPressed: () {
               homeworkController.toggleView();
@@ -49,7 +30,56 @@ class HomeworkRankingPage extends StatelessWidget {
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
           )),
+      child: Obx(() {
+        if (homeworkController.isLoading.value) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: homeworkController.showHomework.value
+              ? HomeworkListView()
+              : RankingListView(),
+        );
+      }),
     );
+
+    // return Scaffold(
+    //   backgroundColor: Colors.blue[50],
+    //   appBar: AppBar(
+    //     backgroundColor: Colors.blue,
+    //     leading: IconButton(
+    //       icon: Icon(Icons.arrow_back, color: Colors.white),
+    //       onPressed: () => Get.back(),
+    //     ),
+    //     title:
+    //         Text('HomeWork & Rankings', style: TextStyle(color: Colors.white)),
+    //   ),
+    //   body: Obx(() {
+    //     if (homeworkController.isLoading.value) {
+    //       return const Center(child: CircularProgressIndicator());
+    //     }
+    //     return Padding(
+    //       padding: const EdgeInsets.all(16.0),
+    //       child: homeworkController.showHomework.value
+    //           ? HomeworkListView()
+    //           : RankingListView(),
+    //     );
+    //   }),
+    //   floatingActionButton: Obx(() => FloatingActionButton.extended(
+    //         onPressed: () {
+    //           homeworkController.toggleView();
+    //         },
+    //         label: Text(homeworkController.showHomework.value
+    //             ? "View Rankings"
+    //             : "View Homework"),
+    //         icon: Icon(homeworkController.showHomework.value
+    //             ? Icons.leaderboard
+    //             : Icons.book),
+    //         backgroundColor: Colors.blueAccent,
+    //         shape:
+    //             RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+    //       )),
+    // );
   }
 }
 

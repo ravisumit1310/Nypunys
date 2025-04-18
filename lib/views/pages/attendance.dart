@@ -30,7 +30,6 @@ class AttendancePage extends StatelessWidget {
 
         return Column(
           children: [
-            // 🔹 Month Selector (Dynamic Month)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 12.0),
               child: Row(
@@ -146,7 +145,7 @@ class AttendancePage extends StatelessWidget {
           ],
         );
       }),
-      showBackButton: true, // ✅ Show back button
+      showBackButton: false,
     );
   }
 
