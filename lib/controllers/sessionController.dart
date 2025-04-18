@@ -1,27 +1,34 @@
 import 'dart:async';
 import 'dart:convert';
-
-import 'package:academyapp/utils/apicServices.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/studentDetails_Model.dart';
+import 'package:academyapp/utils/apicServices.dart';
 
 class SessionController extends GetxController {
   final _storage = GetStorage();
+
+  // Reactive state
   var isLoggedIn = false.obs;
-  Timer? _logoutTimer;
   Rx<StudentDetailsModel?> _studentProfile = Rx<StudentDetailsModel?>(null);
 
-  StudentDetailsModel? get studentProfile => _studentProfile.value;
+  // Session timers
+  Timer? _logoutTimer;
+  Timer? _refreshTimer;
 
+  // Getters
+  StudentDetailsModel? get studentProfile => _studentProfile.value;
+  String? get accessToken => _storage.read('access_token');
+  String? get refreshToken => _storage.read('refresh_token');
+
+  // Setters
   set studentProfile(StudentDetailsModel? profile) {
     _studentProfile.value = profile;
     if (profile != null) {
       _storage.write('student_profile', jsonEncode(profile.toJson()));
-      print(
-          "This is the Data in the session controller -->  ${jsonEncode(profile.toJson())}");
+      print("📥 Saved student profile: ${jsonEncode(profile.toJson())}");
     } else {
       _storage.remove('student_profile');
     }
@@ -30,8 +37,19 @@ class SessionController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    checkTokenOnStartUp();
+    _loadCurrentSession();
+  }
+
+  // ===========================
+  // SESSION LOAD / SAVE
+  // ===========================
+
+  void _loadCurrentSession() {
     loadStudentProfile();
+    if (_studentProfile.value != null) {
+      isLoggedIn.value = true;
+      _setupAutoTokenRefresh();
+    }
   }
 
   void saveSession(String accessToken, String refreshToken,
@@ -40,35 +58,10 @@ class SessionController extends GetxController {
     _storage.write('refresh_token', refreshToken);
     _storage.write('student_profile', jsonEncode(studentData));
     _storage.write('login_time', DateTime.now().millisecondsSinceEpoch);
+
     studentProfile = StudentDetailsModel.fromJson(studentData);
     isLoggedIn.value = true;
-
-    _startAutoLogoutTimer();
-  }
-
-  void _startAutoLogoutTimer() {
-    _logoutTimer?.cancel();
-    _logoutTimer = Timer(const Duration(hours: 1), () {
-      logout();
-      Get.snackbar("Session Expired", "You have been logged out after 1 hour.");
-    });
-  }
-
-  String? get accessToken => _storage.read('access_token');
-  String? get refreshToken => _storage.read('refresh_token');
-
-  void logout() {
-    _logoutTimer?.cancel(); // Fix: Stop auto-logout timer
-    String? savedEmail = _storage.read('saved_email');
-    _storage.erase();
-    _studentProfile.value = null; // Fix: Correct way to clear reactive variable
-    isLoggedIn.value = false;
-
-    if (savedEmail != null && savedEmail.isNotEmpty) {
-      _storage.write('saved_email', savedEmail);
-    }
-
-    Get.offAllNamed('/login');
+    _setupAutoTokenRefresh();
   }
 
   void loadStudentProfile() {
@@ -82,23 +75,32 @@ class SessionController extends GetxController {
   void updateStudentProfile(Map<String, dynamic> studentData) {
     studentProfile = StudentDetailsModel.fromJson(studentData);
     isLoggedIn.value = true;
-    print("🔄 Updated Student Profile: ${studentProfile?.toJson()}");
+    print("🔄 Updated profile: ${studentProfile?.toJson()}");
+  }
+
+  // ===========================
+  // TOKEN HANDLING
+  // ===========================
+
+  void _setupAutoTokenRefresh() {
+    _refreshTimer?.cancel();
+    _refreshTimer =
+        Timer.periodic(Duration(minutes: 55), (_) => refreshAccessToken());
   }
 
   Future<void> checkTokenOnStartUp() async {
-    await Future.delayed(const Duration(microseconds: 500));
+    await Future.delayed(Duration(microseconds: 500));
 
-    String? token = accessToken;
+    final token = accessToken;
+    final loginTime = _storage.read('login_time');
 
-    int? loginTime = _storage.read('login_time');
     if (loginTime != null) {
-      int elapsedSeconds =
+      final elapsedSeconds =
           (DateTime.now().millisecondsSinceEpoch - loginTime) ~/ 1000;
       if (elapsedSeconds >= 3600) {
         logout();
         return;
       }
-      _startAutoLogoutTimer();
     }
 
     if (token == null || !(await isAccessTokenValid(token))) {
@@ -108,29 +110,24 @@ class SessionController extends GetxController {
     }
   }
 
-  Future<bool> isAccessTokenValid(String? token) async {
-    return token != null && token.isNotEmpty;
-  }
-
   Future<void> refreshAccessToken() async {
-    String? refreshToken = _storage.read('refresh_token');
-    if (refreshToken == null) {
-      logout();
-      return;
-    }
+    final rToken = refreshToken;
+    if (rToken == null) return logout();
 
     try {
-      final url = Uri.parse("${ServerConfig.baseUrl}/auth/token/refresh/");
       final response = await http.post(
-        url,
+        Uri.parse("${ServerConfig.baseUrl}/student/token/refresh/"),
         headers: {"Content-Type": "application/json"},
-        body: jsonEncode({"current_refresh_token": refreshToken}),
+        body: jsonEncode({"current_refresh_token": rToken}),
       );
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        saveSession(data["access_token"], data["refresh_token"],
-            _studentProfile.value?.toJson() ?? {}); // Fix: Correct reference
+        saveSession(
+          data['access_token'],
+          data['refresh_token'],
+          _studentProfile.value?.toJson() ?? {},
+        );
       } else {
         logout();
       }
@@ -138,121 +135,130 @@ class SessionController extends GetxController {
       logout();
     }
   }
-}
 
-// class SessionController extends GetxController {
-//   final _storage = GetStorage();
-//   var isLoggedIn = false.obs;
-//   StudentDetailsModel? _studentProfile;
-//   Timer? _logoutTimer; // ⏳ Timer for auto-logout
-//
-//   @override
-//   void onInit() {
-//     super.onInit();
-//     checkTokenOnStartUp();
-//     loadStudentProfile();
-//   }
-//
-//   void saveSession(String accessToken, String refreshToken,
-//       Map<String, dynamic> studentData) {
-//     _storage.write('access_token', accessToken);
-//     _storage.write('refresh_token', refreshToken);
-//     _storage.write('student_profile', jsonEncode(studentData));
-//     _storage.write('login_time', DateTime.now().millisecondsSinceEpoch);
-//     _studentProfile = StudentDetailsModel.fromJson(studentData);
-//     isLoggedIn.value = true;
-//
-//     _startAutoLogoutTimer();
-//   }
-//
-//   void _startAutoLogoutTimer() {
-//     _logoutTimer?.cancel();
-//     _logoutTimer = Timer(const Duration(hours: 1), () {
-//       logout();
-//       Get.snackbar("Session Expired", "You have been logged out after 1 hour.");
-//     });
-//   }
-//
-//   String? get accessToken => _storage.read('access_token');
-//   String? get refreshToken => _storage.read('refresh_token');
-//   // Map<String, dynamic>? get studentProfile => _storage.read('student_profile');
-//   StudentDetailsModel? get studentProfile => _studentProfile;
-//
-//   void logout() {
-//     String? savedEmail = _storage.read('saved_email');
-//     _storage.erase();
-//     _studentProfile = null;
-//     isLoggedIn.value = false;
-//
-//     // Restore the saved email if it was set
-//     if (savedEmail != null && savedEmail.isNotEmpty) {
-//       _storage.write('saved_email', savedEmail);
-//     }
-//
-//     Get.offAllNamed('/login');
-//   }
-//
-//   void loadStudentProfile() {
-//     String? storedProfile = _storage.read('student_profile');
-//     if (storedProfile != null) {
-//       _studentProfile = StudentDetailsModel.fromJson(jsonDecode(storedProfile));
-//     }
-//   }
-//
-//   //Check Token on startup
-//   Future<void> checkTokenOnStartUp() async {
-//     await Future.delayed(const Duration(microseconds: 500));
-//
-//     String? token = accessToken;
-//
-//     int? loginTime = _storage.read('login_time');
-//     if (loginTime != null) {
-//       int elapsedSeconds =
-//           (DateTime.now().millisecondsSinceEpoch - loginTime) ~/ 1000;
-//       if (elapsedSeconds >= 3600) {
-//         logout();
-//         return;
-//       }
-//       _startAutoLogoutTimer();
-//     }
-//
-//     if (token == null || !(await isAccessTokenValid(token))) {
-//       await refreshAccessToken();
-//     } else {
-//       isLoggedIn.value = true;
-//     }
-//   }
-//
-//   //checking token
-//   Future<bool> isAccessTokenValid(String? token) async {
-//     return token != null && token.isNotEmpty;
-//   }
-//
-//   //if token expired the refresh
-//   Future<void> refreshAccessToken() async {
-//     String? refreshToken = _storage.read('refresh_token');
-//     if (refreshToken == null) {
-//       logout();
-//       return;
-//     }
-//
-//     try {
-//       final url = Uri.parse("${ServerConfig.baseUrl}/auth/token/refresh/");
-//       final response = await http.post(
-//         url,
-//         headers: {"Content-Type": "application/json"},
-//         body: jsonEncode({"current_refresh_token": refreshToken}),
-//       );
-//
-//       if (response.statusCode == 200) {
-//         final data = jsonDecode(response.body);
-//         saveSession(data["access_token"], data["refresh_token"],
-//             _studentProfile?.toJson() ?? {});
-//       } else {
-//         logout();
-//       }
-//     } catch (e) {
-//       logout();
-//     }
-//   }
-// }
+  Future<bool> isAccessTokenValid(String? token) async {
+    return token != null && token.isNotEmpty;
+  }
+
+  Map<String, dynamic> parseJwt(String token) {
+    final parts = token.split('.');
+    if (parts.length != 3) throw Exception('Invalid JWT');
+    final payload =
+        utf8.decode(base64Url.decode(base64Url.normalize(parts[1])));
+    return json.decode(payload);
+  }
+
+  // ===========================
+  // ACCOUNT SWITCHING / MULTI-LOGIN
+  // ===========================
+
+  void saveCurrentAccount() {
+    if (studentProfile != null && accessToken != null && refreshToken != null) {
+      final key = "account_user_${studentProfile!.id}";
+      _storage.write(
+          key,
+          jsonEncode({
+            "access_token": accessToken,
+            "refresh_token": refreshToken,
+            "student_profile": studentProfile!.toJson(),
+          }));
+    }
+  }
+
+  List<Map<String, dynamic>> getSavedAccounts() {
+    final rawKeys = _storage.getKeys();
+    print("🧪 All keys from storage: $rawKeys");
+
+    final keys = rawKeys.where((key) {
+      final isString = key is String;
+      final startsCorrectly = isString && key.startsWith("account_user_");
+      print(
+          "🔍 Checking key: $key (isString: $isString, startsCorrectly: $startsCorrectly)");
+      return startsCorrectly;
+    }).toList();
+
+    print("Filtered keys: $keys");
+
+    return keys
+        .map((key) {
+          final raw = _storage.read(key);
+          print("Reading $key -> $raw");
+          if (raw == null) return null;
+
+          final data = jsonDecode(raw);
+          return {
+            "key": key,
+            "profile": data["student_profile"],
+            "access_token": data["access_token"],
+            "refresh_token": data["refresh_token"],
+          };
+        })
+        .whereType<Map<String, dynamic>>()
+        .toList();
+  }
+
+  void storeAccountWithOptionalName({
+    required StudentDetailsModel profile,
+    required String accessToken,
+    required String refreshToken,
+    String? nickname,
+  }) {
+    String fallbackKey;
+
+    if (nickname != null && nickname.trim().isNotEmpty) {
+      fallbackKey = "account_${nickname.trim()}";
+    } else if (profile.id != null) {
+      fallbackKey = "account_user_${profile.id}";
+    } else if (profile.name != null && profile.name.isNotEmpty) {
+      fallbackKey = "account_${profile.name}";
+    } else {
+      List<String> allKeys =
+          _storage.getKeys().where((k) => k.startsWith("account_")).toList();
+      fallbackKey = "account_${allKeys.length + 1}";
+    }
+
+    _storage.write(
+        fallbackKey,
+        jsonEncode({
+          "access_token": accessToken,
+          "refresh_token": refreshToken,
+          "student_profile": profile.toJson(),
+        }));
+
+    print("Stored account [$fallbackKey]");
+  }
+
+  // ===========================
+  // LOGOUT / CLEANUP
+  // ===========================
+
+  void logout() {
+    _logoutTimer?.cancel();
+    _refreshTimer?.cancel();
+
+    final savedKeys = _storage
+        .getKeys()
+        .where((key) => key.startsWith("account_") || key == "saved_nicknames")
+        .toList();
+
+    final savedData = {
+      for (var key in savedKeys) key: _storage.read(key),
+    };
+
+    final savedEmail = _storage.read('saved_email');
+
+    _storage.erase();
+
+    for (var entry in savedData.entries) {
+      _storage.write(entry.key, entry.value);
+    }
+    if (savedEmail != null && savedEmail.isNotEmpty) {
+      _storage.write('saved_email', savedEmail);
+    }
+
+    _studentProfile.value = null;
+    isLoggedIn.value = false;
+
+    Get.offAllNamed('/login');
+  }
+}

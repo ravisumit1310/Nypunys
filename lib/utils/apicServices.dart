@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 class ServerConfig {
   // static const String baseUrl =
   //     "https://nse-nypunya-service-1054208070778.asia-south1.run.app";
-  static const String baseUrl = "http://192.168.106.243:8000";
+  static const String baseUrl = "http://192.168.1.8:8000";
   static const Map<String, String> defaultHeaders = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',

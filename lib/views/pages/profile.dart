@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../utils/appTheme.dart';
 import '../fragments/changePasswordCard.dart';
+import '../widget/switch_account_card.dart';
 
 class ProfilePage extends StatelessWidget {
   ProfilePage({super.key});
@@ -222,7 +223,7 @@ class ProfilePage extends StatelessWidget {
                       height: 50,
                       width: 50,
                       child: const Icon(
-                        Icons.help,
+                        Icons.account_circle_outlined,
                         color: Colors.purple,
                       ),
                       decoration: BoxDecoration(
@@ -230,11 +231,12 @@ class ProfilePage extends StatelessWidget {
                         color: Colors.grey.withOpacity(0.1),
                       ),
                     ),
-                    title: const Text("Need Help!"),
+                    title: const Text("Switch account"),
                     trailing: const Icon(
-                      Icons.navigate_next,
+                      Icons.loop,
                       color: Colors.black,
                     ),
+                    onTap: () => showAccountSwitcher(context),
                   ),
                 ),
                 Divider(
